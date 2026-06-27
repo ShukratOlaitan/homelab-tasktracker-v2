@@ -13,11 +13,11 @@ app = FastAPI()
 def root():
     return {"message": "TaskTracker API"}
 
-@app.get("/tasks")
+@app.get("/tasks", response_model=list[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
     return db.query(Task).all()
 
-@app.post("/tasks")
+@app.post("/tasks", response_model=TaskResponse)
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     new_task = Task(
         title=task.title,
@@ -30,7 +30,7 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
 
     return new_task
 
-@app.get("/tasks/{task_id}")
+@app.get("/tasks/{task_id}", response_model=TaskResponse)
 def get_task(task_id: int, db: Session = Depends(get_db)):
     task = db.query(Task).filter(Task.id == task_id).first()
 
