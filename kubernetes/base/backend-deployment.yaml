@@ -23,6 +23,12 @@ spec:
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
           env:
             - name: DATABASE_URL
               value: postgresql+psycopg://postgres:password@postgres:5432/tasktracker
