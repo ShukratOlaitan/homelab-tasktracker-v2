@@ -14,9 +14,15 @@ spec:
     spec:
       containers:
         - name: backend
-          image: shukratolaitan/tasktracker-backend:v1
+          image: shukratolaitan/tasktracker-backend:v4
           ports:
             - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
           env:
             - name: DATABASE_URL
               value: postgresql+psycopg://postgres:password@postgres:5432/tasktracker

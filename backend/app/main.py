@@ -12,6 +12,10 @@ app = FastAPI()
 def root():
     return {"message": "TaskTracker API"}
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.get("/tasks", response_model=list[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
     return db.query(Task).all()

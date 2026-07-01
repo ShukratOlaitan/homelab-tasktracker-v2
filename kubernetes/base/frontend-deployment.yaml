@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasktracker-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasktracker-frontend
+  template:
+    metadata:
+      labels:
+        app: tasktracker-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: shukratolaitan/tasktracker-frontend:v1
+          ports:
+            - containerPort: 80
