@@ -31,14 +31,3 @@ jobs:
           push: true
           tags: shukratolaitan/tasktracker-backend:${{ github.sha }}
       
-      - name: Update Kubernetes image tag
-        run: |
-          sed -i "s|image: shukratolaitan/tasktracker-backend:.*|image: shukratolaitan/tasktracker-backend:${{ github.sha }}|" kubernetes/base/backend-deployment.yaml
-
-      - name: Commit updated image tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add kubernetes/base/backend-deployment.yaml
-          git commit -m "Update backend image to ${{ github.sha }}" || echo "No changes to commit"
-          git push
