@@ -8,8 +8,8 @@ on:
       - "backend/**"
       - ".github/workflows/backend-image.yaml"
       - "kubernetes/base/backend-deployment.yaml"
-  permissions:
-    contents: write
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
