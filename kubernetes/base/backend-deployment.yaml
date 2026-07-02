@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: shukratolaitan/tasktracker-backend:99ed540461eb4f5b6728d75fc9980854031683d5
+          image: shukratolaitan/tasktracker-backend:37bb4c5bad3c3611395526325fc891d2b250ef5e
           ports:
             - containerPort: 8000
           readinessProbe:
