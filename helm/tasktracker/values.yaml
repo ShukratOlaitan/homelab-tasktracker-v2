@@ -1,0 +1,24 @@
+backend:
+  replicaCount: 2
+
+  image:
+    repository: shukratolaitan/tasktracker-backend
+    tag: 37bb4c5bad3c3611395526325fc891d2b250ef5e
+
+  port: 8000
+
+  service:
+    type: ClusterIP
+    port: 8000
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  secret:
+    name: backend-secret
+    databaseUrlKey: DATABASE_URL
