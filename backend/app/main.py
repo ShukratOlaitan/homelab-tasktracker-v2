@@ -1,10 +1,17 @@
 from sqlalchemy.orm import Session
+import logging
 from fastapi import FastAPI, HTTPException, Depends
 
 from app.database import get_db
 from app.models import Task
 from app.schemas import TaskCreate, TaskUpdate, TaskResponse
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -14,6 +21,7 @@ def root():
 
 @app.get("/health")
 def health():
+    logger.info("Health check requested")
     return {"status": "ok"}
 
 @app.get("/tasks", response_model=list[TaskResponse])
@@ -31,7 +39,11 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
-
+    logger.info(
+    "Task created task_id=%s title=%s",
+    new_task.id,
+    new_task.title
+)
     return new_task
 
 @app.get("/tasks/{task_id}", response_model=TaskResponse)
