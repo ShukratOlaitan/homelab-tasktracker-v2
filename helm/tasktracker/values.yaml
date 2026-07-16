@@ -22,3 +22,45 @@ backend:
   secret:
     name: backend-secret
     databaseUrlKey: DATABASE_URL
+
+frontend:
+  replicaCount: 1
+
+  image:
+    repository: shukratolaitan/tasktracker-frontend
+    tag: v1
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "128Mi"
+
+postgres:
+  replicaCount: 1
+
+  image:
+    repository: postgres
+    tag: "17"
+
+  port: 5432
+
+  secret:
+    name: postgres-secret
+    database: tasktracker
+    username: postgres
+    password: password
+  storage:
+    claimName: postgres-data
+    mountPath: /var/lib/postgresql/data
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tasktracker-backend
+  name: {{ .Release.Name }}-backend
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
