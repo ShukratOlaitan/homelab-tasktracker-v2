@@ -40,9 +40,9 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_task)
     logger.info(
-    "Task created task_id=%s title=%s",
-    new_task.id,
-    new_task.title
+        "Task created task_id=%s title=%s",
+        new_task.id,
+        new_task.title
 )
     return new_task
 
