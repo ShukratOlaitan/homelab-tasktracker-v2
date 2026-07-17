@@ -24,7 +24,7 @@ backend:
     databaseUrlKey: DATABASE_URL
 
 frontend:
-  replicaCount: 1
+  replicaCount: 2
 
   image:
     repository: shukratolaitan/tasktracker-frontend
