@@ -13,3 +13,7 @@ build/
 # Sealed Secrets local files
 sealed-secrets-cert.pem
 gitops/secrets/backend-secret-plain.yaml
+
+# Sealed Secrets local files
+sealed-secrets-cert.pem
+gitops/secrets/backend-secret-plain.yaml
