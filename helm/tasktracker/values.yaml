@@ -1,16 +1,12 @@
 backend:
   replicaCount: 2
-
   image:
     repository: shukratolaitan/tasktracker-backend
-    tag: 37bb4c5bad3c3611395526325fc891d2b250ef5e
-
+    tag: 3bfcfc891ca21c7944342f509238a83f53daf688
   port: 8000
-
   service:
     type: ClusterIP
     port: 8000
-
   resources:
     requests:
       cpu: "100m"
@@ -18,18 +14,14 @@ backend:
     limits:
       cpu: "500m"
       memory: "512Mi"
-
   secret:
     name: backend-secret
     databaseUrlKey: DATABASE_URL
-
 frontend:
   replicaCount: 2
-
   image:
     repository: shukratolaitan/tasktracker-frontend
     tag: v1
-
   resources:
     requests:
       cpu: "50m"
@@ -37,16 +29,12 @@ frontend:
     limits:
       cpu: "200m"
       memory: "128Mi"
-
 postgres:
   replicaCount: 1
-
   image:
     repository: postgres
     tag: "17"
-
   port: 5432
-
   secret:
     name: postgres-secret
     database: tasktracker
@@ -56,7 +44,6 @@ postgres:
     claimName: postgres-data
     mountPath: /var/lib/postgresql/data
     size: 5Gi
-
   resources:
     requests:
       cpu: "100m"
