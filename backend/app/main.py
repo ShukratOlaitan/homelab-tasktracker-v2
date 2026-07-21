@@ -1,10 +1,26 @@
 from sqlalchemy.orm import Session
 import logging
-from fastapi import FastAPI, HTTPException, Depends
 
-from app.database import get_db
-from app.models import Task
-from app.schemas import TaskCreate, TaskUpdate, TaskResponse
+from fastapi import FastAPI, HTTPException, Depends
+from prometheus_fastapi_instrumentator import Instrumentator
+
+from .database import get_db
+from . import models, schemas 
+
+from .schemas import TaskCreate, TaskUpdate, TaskResponse
+from .models import Task
+
+# Create the FastAPI application
+app = FastAPI()
+
+# Enable Prometheus metrics
+Instrumentator().instrument(app).expose(app)
+
+logging.basicConfig(level=logging.INFO)
+
+@app.get("/")
+def root():
+    return {"message": "TaskTracker API"}
 
 logging.basicConfig(
     level=logging.INFO,
@@ -12,12 +28,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"message": "TaskTracker API"}
 
 @app.get("/health")
 def health():

@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: tasktracker-backend
+  namespace: tasktracker-gitops
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: tasktracker-backend
+  namespaceSelector:
+    matchNames:
+      - tasktracker-gitops
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
