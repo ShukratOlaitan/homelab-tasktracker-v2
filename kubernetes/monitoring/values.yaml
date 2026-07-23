@@ -1,0 +1,21 @@
+grafana:
+  envFromSecret: grafana-smtp-secret
+
+  persistence:
+    enabled: true
+    type: pvc
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+  grafana.ini:
+    smtp:
+      enabled: true
+      host: smtp.gmail.com:587
+      user: $__env{GF_SMTP_USER}
+      password: $__env{GF_SMTP_PASSWORD}
+      from_address: shukratolaitan@gmail.com
+      from_name: TaskTracker Grafana
+      skip_verify: false
+      startTLS_policy: MandatoryStartTLS
