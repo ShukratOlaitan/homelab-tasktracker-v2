@@ -1,0 +1,84 @@
+# Loki will run as one process containing its read, write,
+# query, compactor, and storage functionality.
+deploymentMode: SingleBinary
+
+loki:
+  # Authentication is unnecessary for this internal homelab service.
+  # Loki will only be reachable inside the Kubernetes cluster.
+  auth_enabled: false
+
+  commonConfig:
+    # Only one Loki replica exists, so each log chunk has one copy.
+    replication_factor: 1
+
+  # Loki divides stored logs into time-based indexes.
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  storage:
+    # Store chunks and indexes on Loki's local persistent volume.
+    type: filesystem
+
+  limits_config:
+    # Automatically remove logs older than seven days.
+    retention_period: 168h
+
+  compactor:
+    # The compactor enforces retention and cleans old log data.
+    retention_enabled: true
+    delete_request_store: filesystem
+
+singleBinary:
+  replicas: 1
+
+  persistence:
+    enabled: true
+    storageClass: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+# These components belong to scalable or distributed Loki modes.
+# They must be zero when Loki runs in SingleBinary mode.
+read:
+  replicas: 0
+
+write:
+  replicas: 0
+
+backend:
+  replicas: 0
+
+# Disable caches initially to keep this homelab installation small.
+chunksCache:
+  enabled: false
+
+resultsCache:
+  enabled: false
+
+# Canary continuously generates test logs.
+# It is useful in production but unnecessary for this first lab.
+lokiCanary:
+  enabled: false
+
+# Disable the chart's Helm connectivity test pod.
+test:
+  enabled: false
+
+gateway:
+  enabled: true
