@@ -1,0 +1,133 @@
+iapiVersion: 1
+groups:
+    - orgId: 1
+      name: tasktracker-health
+      folder: TaskTracker
+      interval: 1m
+      rules:
+        - uid: dft01u4rs3474b
+          title: TaskTracker Backend Pod Down
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: prometheus
+              model:
+                editorMode: code
+                expr: sum(up{job="tasktracker-backend"})
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              queryType: expression
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 2
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 2m
+          annotations:
+            description: Prometheus has detected that fewer than two TaskTracker backend targets have been scrapeable for at least two minutes.
+            summary: Fewer than two TaskTracker backend targets are available.
+          labels:
+            environment: homelab
+            service: tasktracker-backend
+            severity: critical
+          isPaused: false
+          notification_settings:
+            receiver: TaskTracker Email
+        - uid: cftp4wxxm1p8gd
+          title: TaskTracker Backend Log Errors
+          condition: C
+          data:
+            - refId: A
+              queryType: instant
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: loki
+              model:
+                datasource:
+                    type: loki
+                    uid: loki
+                editorMode: code
+                expr: |-
+                    sum(
+                      count_over_time(
+                        {namespace="tasktracker-gitops",container="backend"}
+                        |~ "(?i)error|exception|failed|fatal"
+                        [5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                maxDataPoints: 43200
+                queryType: instant
+                refId: A
+            - refId: C
+              queryType: expression
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 2
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: OK
+          execErrState: Error
+          for: 1m
+          keepFiringFor: 2m
+          annotations:
+            description: At least 3 backend log entries containing error, exception, failed, or fatal were detected within 5 minutes.
+            summary: TaskTracker backend is producing repeated error logs
+          labels:
+            namespace: tasktracker-gitops
+            service: tasktracker-backend
+            severity: warning
+          isPaused: false
+          notification_settings:
+            receiver: TaskTracker Email
+
