@@ -29,3 +29,10 @@ grafana:
       jsonData:
         timeout: 60
         maxLines: 1000
+ 
+  extraConfigmapMounts:
+    - name: grafana-alerting-rules
+      mountPath: /etc/grafana/provisioning/alerting/tasktracker-backend-log-errors.yaml
+      subPath: tasktracker-backend-log-errors.yaml
+      configMap: grafana-alerting-rules
+      readOnly: true
